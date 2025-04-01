@@ -1,0 +1,33 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.9"
+name = "kobe_shot_prediction_ml"
+readme = "README.md"
+dynamic = [ "version",]
+dependencies = [ "ipython>=8.10", "jupyterlab>=3.0", "notebook", "kedro~=0.19.12",]
+
+[project.scripts]
+kobe-shot-prediction-ml = "kobe_shot_prediction_ml.__main__:main"
+
+[tool.kedro]
+package_name = "kobe_shot_prediction_ml"
+project_name = "kobe-shot-prediction-ml"
+kedro_init_version = "0.19.12"
+tools = "['None']"
+example_pipeline = "False"
+source_dir = "src"
+
+[project.entry-points."kedro.hooks"]
+
+[tool.setuptools.dynamic.version]
+attr = "kobe_shot_prediction_ml.__version__"
+
+[tool.setuptools.packages.find]
+where = [ "src",]
+namespaces = false
+
+[tool.kedro_telemetry]
+project_id = "59130cfe9fc749189263367f6633f9fb"

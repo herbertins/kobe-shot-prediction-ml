@@ -1,0 +1,31 @@
+kobe_dev_data:
+  type: pandas.ParquetDataset
+  filepath: data/01_raw/dataset_kobe_dev.parquet
+
+kobe_prod_data:
+  type: pandas.ParquetDataset
+  filepath: data/01_raw/dataset_kobe_prod.parquet
+
+kobe_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/predictions_prod.parquet
+  save_args:
+    index: False
+
+kobe_filtered_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/data_filtered.parquet
+  save_args:
+    index: False
+
+kobe_train_data:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/base_train.parquet
+  save_args:
+    index: False
+
+kobe_test_data:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/base_test.parquet
+  save_args:
+    index: False
