@@ -6,12 +6,6 @@ kobe_prod_data:
   type: pandas.ParquetDataset
   filepath: data/01_raw/dataset_kobe_prod.parquet
 
-kobe_predictions:
-  type: pandas.ParquetDataset
-  filepath: data/07_model_output/predictions_prod.parquet
-  save_args:
-    index: False
-
 kobe_filtered_data:
   type: pandas.ParquetDataset
   filepath: data/02_intermediate/data_filtered.parquet
@@ -29,3 +23,10 @@ kobe_test_data:
   filepath: data/03_primary/base_test.parquet
   save_args:
     index: False
+
+kobe_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/predictions_prod.parquet
+  save_args:
+    index: False
+

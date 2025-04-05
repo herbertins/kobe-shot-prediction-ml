@@ -6,8 +6,11 @@ import mlflow
 def apply_model_pipeline(df: pd.DataFrame) -> pd.DataFrame:
     mlflow.set_experiment("PipelineAplicacao")
 
-    # Remove linhas onde o target está ausente (importantíssimo para métricas)
-    df_valid = df.dropna(subset=["shot_made_flag"])
+    if "shot_made_flag" not in df.columns:
+        print("Atenção: coluna shot_made_flag não está presente nos dados de produção. Métricas supervisionadas não serão computadas.")
+        df_valid = None
+    else:
+         df_valid = df.dropna(subset=["shot_made_flag"])
 
     with mlflow.start_run(run_name="predict_prod"):
         # Carrega o modelo
@@ -22,6 +25,9 @@ def apply_model_pipeline(df: pd.DataFrame) -> pd.DataFrame:
 
         f1 = f1_score(y_true, y_pred)
         ll = log_loss(y_true, y_pred)
+
+        pred_df.to_parquet("data/07_model_output/predictions_prod.parquet", index=False)
+        mlflow.log_artifact("data/07_model_output/predictions_prod.parquet")
 
         mlflow.log_metric("f1_score_prod", f1)
         mlflow.log_metric("log_loss_prod", ll)
