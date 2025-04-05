@@ -26,8 +26,8 @@ def apply_model_pipeline(df: pd.DataFrame) -> pd.DataFrame:
         f1 = f1_score(y_true, y_pred)
         ll = log_loss(y_true, y_pred)
 
-        pred_df.to_parquet("data/07_model_output/predictions_prod.parquet", index=False)
-        mlflow.log_artifact("data/07_model_output/predictions_prod.parquet")
+        pred_df.to_parquet("data/model_output/predictions_prod.parquet", index=False)
+        mlflow.log_artifact("data/model_output/predictions_prod.parquet")
 
         mlflow.log_metric("f1_score_prod", f1)
         mlflow.log_metric("log_loss_prod", ll)
