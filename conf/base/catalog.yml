@@ -1,32 +1,48 @@
 kobe_dev_data:
   type: pandas.ParquetDataset
-  filepath: data/raw/dataset_kobe_dev.parquet
+  filepath: data/01_raw/dataset_kobe_dev.parquet
 
 kobe_prod_data:
   type: pandas.ParquetDataset
-  filepath: data/raw/dataset_kobe_prod.parquet
+  filepath: data/01_raw/dataset_kobe_prod.parquet
 
 kobe_filtered_data:
   type: pandas.ParquetDataset
-  filepath: data/intermediate/data_filtered.parquet
+  filepath: data/02_intermediate/data_filtered.parquet
   save_args:
     index: False
 
 kobe_train_data:
   type: pandas.ParquetDataset
-  filepath: data/primary/base_train.parquet
+  filepath: data/03_primary/base_train.parquet
   save_args:
     index: False
 
 kobe_test_data:
   type: pandas.ParquetDataset
-  filepath: data/primary/base_test.parquet
+  filepath: data/03_primary/base_test.parquet
   save_args:
     index: False
 
+model_dt:
+  type: pickle.PickleDataset
+  filepath: data/06_models/model_dt.pkl
+
+model_lr:
+  type: pickle.PickleDataset
+  filepath: data/06_models/model_lr.pkl
+
+logistic_model_report:
+  type: pandas.JSONDataset
+  filepath: data/08_reporting/logistic_model_report.json
+
+decision_tree_model_report:
+  type: pandas.JSONDataset
+  filepath: data/08_reporting/decision_tree_model_report.json
+
 kobe_predictions:
   type: pandas.ParquetDataset
-  filepath: data/model_output/predictions_prod.parquet
+  filepath: data/07_model_output/predictions_prod.parquet
   save_args:
     index: False
 

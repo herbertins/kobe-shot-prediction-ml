@@ -37,6 +37,7 @@ Este projeto usa técnicas de Machine Learning e engenharia de dados para prever
 kobe-shot-prediction-ml/
 ├── data/                          # Dados (adicionados no .gitignore)
 │   ├── 01_raw/                    # Dados brutos (.parquet)
+│   ├── 01_raw/                    # Dados brutos (.parquet)
 │   ├── 07_model_output/           # Previsões do modelo
 ├── notebooks/                     # Notebooks exploratórios
 ├── src/

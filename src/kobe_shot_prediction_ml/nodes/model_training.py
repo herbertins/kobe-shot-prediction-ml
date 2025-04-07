@@ -3,52 +3,58 @@ from sklearn.metrics import log_loss, f1_score
 import pandas as pd
 import mlflow
 
-def train_models(df_train: pd.DataFrame, df_test: pd.DataFrame) -> dict:
+def train_logistic_model(df_train: pd.DataFrame, df_test: pd.DataFrame) -> dict:
     
-    # Inicia experimento no MLflow
     mlflow.set_experiment("Treinamento")
-    
-    # Treinar logistic regression
+   
     with mlflow.start_run(run_name="logistic_model"):
+        setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
+        model = create_model('lr')
+        results = predict_model(model, data=df_test)
 
-        s = setup(
-                data=df_train,
-                target='shot_made_flag',
-                session_id=42,
-                preprocess=True,
-                html=False,
-                n_jobs=-1
-            )
-        
-        model_lr = create_model('lr')
-        lr_results = predict_model(model_lr, data=df_test)
-        
-        mlflow.log_metric("log_loss_lr", log_loss(lr_results['shot_made_flag'], lr_results['prediction_label']))
-        mlflow.log_metric("f1_score_lr", f1_score(lr_results["shot_made_flag"], lr_results["prediction_label"]))
+        logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
+        f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
 
-        # save_model(model_lr, "models/model_logistic")
+        mlflow.log_metric("log_loss_lr", logloss)
+        mlflow.log_metric("f1_score_lr", f1)
+        
+        report = {
+            "model": "logistic_regression",
+            "log_loss": logloss,
+            "f1_score": f1,
+            "prediction_sample": results.head(5).to_dict(orient="records")
+        }
+        
+        return report
+
+
+# def train_decision_tree(df_train: pd.DataFrame, df_test: pd.DataFrame) -> dict:
     
-    # Treinar arvore de decisão
-    with mlflow.start_run(run_name="decision_tree"):
-        
-        s = setup(
-                data=df_train,
-                target='shot_made_flag',
-                session_id=42,
-                preprocess=True,
-                html=False,
-                n_jobs=-1
-            )
-        
-        model_dt = create_model('dt')
-        dt_results = predict_model(model_dt, data=df_test)
+#     mlflow.set_experiment("Treinamento")
+    
+#     with mlflow.start_run(run_name="decision_tree"):
+#         setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
+#         model = create_model('dt')
+#         results = predict_model(model, data=df_test)
 
-        mlflow.log_metric("log_loss_lr", log_loss(dt_results['shot_made_flag'], lr_results['prediction_label']))
-        mlflow.log_metric("f1_score_lr", f1_score(dt_results["shot_made_flag"], lr_results["prediction_label"]))
+#         logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
+#         f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
+
+#         mlflow.log_metric("log_loss_lr", logloss)
+#         mlflow.log_metric("f1_score_lr", f1)
+    
+#         report = {
+#             "model": "decision_tree",
+#             "log_loss": logloss,
+#             "f1_score": f1,
+#             "prediction_sample": results.head(5).to_dict(orient="records")
+#         }
         
-        # save_model(model_dt, "models/model_tree")
+#         return {"model": model, "report": report}
+    
+# def select_and_log_best_model() -> dict:
+#     with mlflow.start_run(run_name="decision_tree"):
+#         mlflow.sklearn.log_model(dt_model, artifact_path="final_model")
+#         mlflow.log_param("selected_model", dt_model)
 
-    save_model(model_dt, "final_model")
-
-    # Decide qual será o modelo final com base na métrica
-    return {"message": "Modelos treinados e registrados no MLflow."}
+#     return dt_model
