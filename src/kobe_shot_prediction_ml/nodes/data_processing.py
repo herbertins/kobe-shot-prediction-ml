@@ -1,5 +1,6 @@
-import pandas as pd
 from sklearn.model_selection import train_test_split
+import pandas as pd
+import mlflow
 
 def filter_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     # Colunas selecionadas
@@ -35,5 +36,11 @@ def split_train_test(df: pd.DataFrame, test_size: float = 0.2, random_state: int
 
     df_test = X_test.copy()
     df_test['shot_made_flag'] = y_test
+    
+    with mlflow.start_run(run_name="PreparacaoDados", nested=True):
+        mlflow.log_param("test_size_percent", 0.2 * 100)
+        mlflow.log_metric("train_rows", df_train.shape[0])
+        mlflow.log_metric("test_rows", df_test.shape[0])
+        mlflow.log_metric("total_rows", df.shape[0])
 
     return df_train, df_test

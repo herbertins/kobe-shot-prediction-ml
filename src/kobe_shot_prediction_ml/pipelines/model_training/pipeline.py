@@ -2,7 +2,8 @@ from kedro.pipeline import Pipeline, node, pipeline
 from kobe_shot_prediction_ml.nodes.model_training import (
     train_logistic_model,
     train_decision_tree,
-    select_and_log_best_model
+    select_and_log_best_model,
+    save_metrics
 )
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -24,5 +25,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs=["kobe_model_lr", "kobe_predictions_model_lr", "kobe_model_dt", "kobe_predictions_model_dt"],
             outputs="kobe_best_model_node",
             name="select_and_log_best_model_node"
+        ),
+        node(
+            func=save_metrics,
+            inputs=["kobe_predictions_model_lr", "kobe_predictions_model_dt"],
+            outputs=None,
+            name=None
         )
     ])
