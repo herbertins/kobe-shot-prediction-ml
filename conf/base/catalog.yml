@@ -24,25 +24,28 @@ kobe_test_data:
   save_args:
     index: False
 
-model_dt:
+kobe_model_dt:
   type: pickle.PickleDataset
   filepath: data/06_models/model_dt.pkl
 
-model_lr:
+kobe_model_lr:
   type: pickle.PickleDataset
   filepath: data/06_models/model_lr.pkl
 
-logistic_model_report:
-  type: pandas.JSONDataset
-  filepath: data/08_reporting/logistic_model_report.json
+kobe_best_model_node:
+    type: pickle.PickleDataset
+    filepath: data/06_models/final_model.pkl
 
-decision_tree_model_report:
-  type: pandas.JSONDataset
-  filepath: data/08_reporting/decision_tree_model_report.json
+kobe_predictions_model_dt:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/prediction_model_dt.parquet
+
+kobe_predictions_model_lr:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/prediction_model_lr.parquet
 
 kobe_predictions:
   type: pandas.ParquetDataset
   filepath: data/07_model_output/predictions_prod.parquet
   save_args:
     index: False
-

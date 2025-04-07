@@ -1,4 +1,4 @@
-from typing import Tuple,Dict, Any
+from typing import Tuple, Any
 from pycaret.classification import *
 from sklearn.metrics import log_loss, f1_score
 import pandas as pd
@@ -6,58 +6,85 @@ import mlflow
 
 def train_logistic_model(df_train: pd.DataFrame, df_test: pd.DataFrame) -> Tuple[Any, pd.DataFrame]:
     
-    mlflow.set_experiment("Treinamento")
-   
-    setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
-    model = create_model('lr')
-    results = predict_model(model, data=df_test)
+    with mlflow.start_run(run_name="logistic_train", nested=True):
+        
+        setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
+        model = create_model('lr')
+        results = predict_model(model, data=df_test)
 
-    logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
-    f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
+        logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
+        f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
 
-    mlflow.log_metric("log_loss_lr", logloss)
-    mlflow.log_metric("f1_score_lr", f1)
+        mlflow.log_metric("log_loss_lr", logloss)
+        mlflow.log_metric("f1_score_lr", f1)
+        mlflow.log_param("test_size_percent", 0.2 * 100)
+        mlflow.log_metric("train_rows", df_train.shape[0])
+        mlflow.log_metric("test_rows", df_test.shape[0])
+        mlflow.log_metric("total_rows", df_train.shape[0] + df_test.shape[0])
+        
+        # report = {
+        #     "model": "logistic_regression",
+        #     "log_loss": logloss,
+        #     "f1_score": f1,
+        #     "prediction_sample": results.head(5).to_dict(orient="records")
+        # }
     
-    report = {
-        "model": "logistic_regression",
-        "log_loss": logloss,
-        "f1_score": f1,
-        "prediction_sample": results.head(5).to_dict(orient="records")
-    }
-    
-    # save_model(model, "models/model_lr")
-    
-    return model, pd.DataFrame(report)
+    return model, pd.DataFrame(results)
 
 
 def train_decision_tree(df_train: pd.DataFrame, df_test: pd.DataFrame) -> Tuple[Any, pd.DataFrame]:
     
     # mlflow.set_experiment("Treinamento")
+    with mlflow.start_run(run_name="decision_tree_train", nested=True):
+        setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
+        model = create_model('dt')
+        results = predict_model(model, data=df_test)
+
+        logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
+        f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
+
+        mlflow.log_metric("log_loss_lr", logloss)
+        mlflow.log_metric("f1_score_lr", f1)
+        mlflow.log_param("test_size_percent", 0.2 * 100)
+        mlflow.log_metric("train_rows", df_train.shape[0])
+        mlflow.log_metric("test_rows", df_test.shape[0])
+        mlflow.log_metric("total_rows", df_train.shape[0] + df_test.shape[0])
+
     
-    setup(df_train, target='shot_made_flag', session_id=42, preprocess=True, html=False, n_jobs=-1)
-    model = create_model('dt')
-    results = predict_model(model, data=df_test)
-
-    logloss = log_loss(results["shot_made_flag"], results["prediction_label"])
-    f1 = f1_score(results["shot_made_flag"], results["prediction_label"])
-
-    mlflow.log_metric("log_loss_lr", logloss)
-    mlflow.log_metric("f1_score_lr", f1)
-
-    report = {
-        "model": "decision_tree",
-        "log_loss": logloss,
-        "f1_score": f1,
-        "prediction_sample": results.head(5).to_dict(orient="records")
-    }
+        return model, pd.DataFrame(results)
     
-    # save_model(model, "models/model_tree")
+def select_and_log_best_model(
+    lr_model: Any,
+    lr_predictions: pd.DataFrame,
+    dt_model: Any,
+    dt_predictions: pd.DataFrame
+) -> Tuple[str, Any]:
     
-    return model, pd.DataFrame(report)
-    
-# def select_and_log_best_model(lr_results: dict,dt_results: dict,) -> str:
+    # Calcula métricas das predições do modelo logístico
+    lr_logloss = log_loss(lr_predictions["shot_made_flag"], lr_predictions["prediction_label"])
+    lr_f1 = f1_score(lr_predictions["shot_made_flag"], lr_predictions["prediction_label"])
 
-#         mlflow.sklearn.log_model(dt_model, artifact_path="final_model")
-#         mlflow.log_param("selected_model", dt_model)
+    # Calcula métricas das predições da árvore de decisão
+    dt_logloss = log_loss(dt_predictions["shot_made_flag"], dt_predictions["prediction_label"])
+    dt_f1 = f1_score(dt_predictions["shot_made_flag"], dt_predictions["prediction_label"])
 
-#     return dt_model
+    # Cria um DataFrame de comparação
+    comparison_df = pd.DataFrame([
+        {
+            "model": "logistic_regression",
+            "log_loss": lr_logloss,
+            "f1_score": lr_f1
+        },
+        {
+            "model": "decision_tree",
+            "log_loss": dt_logloss,
+            "f1_score": dt_f1
+        }
+    ])
+
+    # Seleciona o melhor modelo (maior f1_score)
+    best_row = comparison_df.loc[comparison_df["f1_score"].idxmax()]
+    best_model_name = best_row["model"]
+    best_model = lr_model if best_model_name == "logistic_regression" else dt_model
+
+    return best_model
