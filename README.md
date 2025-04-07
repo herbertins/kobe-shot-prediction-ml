@@ -6,6 +6,10 @@ Este projeto usa técnicas de Machine Learning e engenharia de dados para prever
 
 ---
 
+## 🔧 Arquitetura do Pipeline
+
+![Pipeline Diagram](docs/kobe_diagram.png)
+
 ## 🚀 Tecnologias utilizadas
 
 - [Kedro](https://kedro.readthedocs.io/en/stable/) – Orquestração de pipelines

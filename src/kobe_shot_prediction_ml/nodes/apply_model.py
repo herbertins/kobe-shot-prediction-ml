@@ -3,8 +3,7 @@ from sklearn.metrics import log_loss, f1_score
 import pandas as pd
 import mlflow
 
-def apply_model_pipeline(final_model, df: pd.DataFrame, ) -> pd.DataFrame:
-    # mlflow.set_experiment("PipelineAplicacao")
+def apply_model(final_model, df: pd.DataFrame, ) -> pd.DataFrame:
 
     if "shot_made_flag" not in df.columns:
         print("Atenção: coluna shot_made_flag não está presente nos dados de produção. Métricas supervisionadas não serão computadas.")
@@ -13,9 +12,9 @@ def apply_model_pipeline(final_model, df: pd.DataFrame, ) -> pd.DataFrame:
          df_valid = df.dropna(subset=["shot_made_flag"])
 
     with mlflow.start_run(run_name="PipelineAplicacao", nested=True):
-        # Carrega o modelo
+        
         model = final_model
-
+        
         # Aplica na base com target presente
         pred_df = predict_model(model, data=df_valid)
 

@@ -21,13 +21,7 @@ def train_logistic_model(df_train: pd.DataFrame, df_test: pd.DataFrame) -> Tuple
         mlflow.log_metric("train_rows", df_train.shape[0])
         mlflow.log_metric("test_rows", df_test.shape[0])
         mlflow.log_metric("total_rows", df_train.shape[0] + df_test.shape[0])
-        
-        # report = {
-        #     "model": "logistic_regression",
-        #     "log_loss": logloss,
-        #     "f1_score": f1,
-        #     "prediction_sample": results.head(5).to_dict(orient="records")
-        # }
+
     
     return model, pd.DataFrame(results)
 
