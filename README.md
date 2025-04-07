@@ -2,26 +2,6 @@
 
 Este projeto usa técnicas de Machine Learning e engenharia de dados para prever se um arremesso de Kobe Bryant foi **cesta ou erro**, com base em informações contextuais da jogada.
 
-> Projeto desenvolvido seguindo o **Framework TDSP da Microsoft** com foco em boas práticas de MLOps e reprodutibilidade com Kedro.
-
----
-
-## 🔧 Arquitetura do Pipeline
-
-![Pipeline Diagram](docs/kobe_diagram.png)
-
-> 📝 O diagrama acima foi criado com [draw.io](https://app.diagrams.net).  
-> Você pode editá-lo no arquivo [`docs/diagram.drawio`](docs/diagram.drawio)
-
-## 🚀 Tecnologias utilizadas
-
-- [Kedro](https://kedro.readthedocs.io/en/stable/) – Orquestração de pipelines
-- [PyCaret](https://pycaret.org/) – Treinamento automatizado de modelos
-- [MLFlow](https://mlflow.org/) – Rastreamento de experimentos e deployment
-- [Scikit-learn](https://scikit-learn.org/) – Métricas e suporte a modelos
-- [Streamlit](https://streamlit.io/) – Dashboard interativo
-- [Pandas, Parquet, PyArrow] – Manipulação de dados
-
 ---
 
 ## 📊 Etapas do projeto
@@ -35,39 +15,6 @@ Este projeto usa técnicas de Machine Learning e engenharia de dados para prever
 | **Avaliação**                 | Métricas: Log Loss e F1-Score (registradas no MLFlow) |
 | **Deploy**                    | Salvamento e aplicação do modelo final |
 | **Dashboard**                 | Interface com Streamlit para análise em produção |
-
----
-
-## 📁 Estrutura do projeto
-
-```
-kobe-shot-prediction-ml/
-├── conf/                      # Configurações de pipeline e parâmetros (por ambiente)
-├── data/                      # Diretórios organizados por estágios do pipeline
-│   ├── 01_raw/                # Dados brutos (originais)
-│   ├── 02_intermediate/       # Dados processados parcialmente
-│   ├── 03_primary/            # Dados limpos, estruturados
-│   ├── 04_features/           # Dados com features engenheiradas
-│   ├── 05_model_input/        # Base pronta para treinamento
-│   ├── 06_models/             # Modelos treinados (.pkl)
-│   ├── 07_model_output/       # Predições e inferências
-│   └── 08_reporting/          # Relatórios finais, comparações e visualizações
-│
-├── docs/                      # Documentação e diagramas do projeto
-├── logs/                      # Logs do Kedro
-├── mlruns/                    # Diretório de tracking do MLflow
-├── notebooks/                 # Notebooks auxiliares ou exploratórios
-├── src/kobe_shot_prediction_ml/
-│   ├── nodes/                 # Funções puras (transformações, treinos, predições)
-│   ├── pipelines/             # Definição e orquestração das pipelines
-│   ├── pipeline_registry.py   # Registro central das pipelines
-│   ├── settings.py            # Configurações globais do projeto
-│   └── dashboard.py           # (Opcional) scripts para visualizações ou dashboards
-│
-├── pyproject.toml             # Configuração de dependências e metadata do projeto
-├── requirements.txt           # Dependências adicionais
-└── README.md                  # Documentação principal do projeto
-```
 
 ---
 
@@ -183,6 +130,15 @@ kobe-shot-prediction-ml/
 ```
 
 ### 3. Como as ferramentas Streamlit, MLflow, PyCaret e Scikit-Learn auxiliam na construção dos pipelines?
+
+## 🚀 Tecnologias utilizadas
+
+- [Kedro](https://kedro.readthedocs.io/en/stable/) – Orquestração de pipelines
+- [PyCaret](https://pycaret.org/) – Treinamento automatizado de modelos
+- [MLFlow](https://mlflow.org/) – Rastreamento de experimentos e deployment
+- [Scikit-learn](https://scikit-learn.org/) – Métricas e suporte a modelos
+- [Streamlit](https://streamlit.io/) – Dashboard interativo
+- [Pandas, Parquet, PyArrow] – Manipulação de dados
 
 ## ⚙️ Tecnologias e Funções no Pipeline de Machine Learning
 
