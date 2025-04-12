@@ -262,6 +262,37 @@ Abaixo estão os artefatos criados ao longo das etapas do pipeline, conforme rep
 
 ---
 
+### 5. Separação entre treino e teste e impacto no modelo final
+
+Separar bem os dados de treino e teste é uma etapa importante pra garantir que o modelo funcione de verdade e não só "decore" os dados. Se a gente usa um conjunto de treino que é muito diferente do teste, o modelo pode parecer bom durante o desenvolvimento, mas falhar quando for colocado pra rodar de verdade.
+
+Pra evitar esse tipo de problema, algumas práticas ajudam bastante:
+- Dividir os dados de forma equilibrada (mantendo a proporção entre acertos e erros, por exemplo)
+- Embaralhar os dados antes de separar em treino e teste
+- Usar validação cruzada pra testar o modelo em várias divisões diferentes
+- Analisar os dados antes de treinar, pra ver se estão bem distribuídos
+
+#### Sobre os dados:
+- O dataset original tinha por volta de **24.271 registros** e **25 colunas**
+- Depois que removemos os registros sem informação no `shot_made_flag`, ficaram **20.285 registros** e **7 colunas**
+- Esses dados foram salvos no arquivo: `data/processed/data_filtered.parquet`
+
+---
+
+### 6. Pipeline de Treinamento com MLflow (`Treinamento`)
+
+Após comparar as métricas de ambos os modelos (log loss e F1), o modelo com **melhor desempenho em log loss** foi escolhido como modelo final. Essa escolha foi feita automaticamente no pipeline por meio de um node de seleção. 
+
+Durante o treinamento, tanto o modelo de regressão logística quanto o de árvore de decisão apresentaram **métricas muito próximas**. Isso levantou uma dúvida: qual métrica usar para escolher o melhor modelo?
+
+Decidi usar o **log loss** como critério principal, porque:
+
+- Ele não olha só se o modelo acertou ou errou, mas **também leva em conta a confiança da predição**
+- Um erro com **muita certeza** (por exemplo, prever que a chance era 95% e errar) é penalizado mais fortemente
+- Isso faz o log loss ser uma métrica mais exigente e justa quando trabalhamos com **probabilidades** ao invés de só rótulos
+
+Mesmo que dois modelos tenham um `f1_score` parecido, o log loss nos ajuda a entender **quem está mais calibrado** nas suas previsões.
+
 ## ✨ Inspiração
 
 > *"The most important thing is to try and inspire people so that they can be great in whatever they want to do."*  
