@@ -27,9 +27,5 @@ def apply_model(final_model, df: pd.DataFrame, ) -> pd.DataFrame:
         
         mlflow.log_metric("f1_score_prod", f1)
         mlflow.log_metric("log_loss_prod", ll)
-        mlflow.log_param("test_size_percent", 0.2 * 100)
-        mlflow.log_metric("train_rows", df.shape[0])
-        mlflow.log_metric("test_rows", df.shape[0])
-        mlflow.log_metric("total_rows", df.shape[0] + df.shape[0])
         
         return pred_df

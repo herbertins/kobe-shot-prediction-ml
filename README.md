@@ -293,6 +293,23 @@ Decidi usar o **log loss** como critério principal, porque:
 
 Mesmo que dois modelos tenham um `f1_score` parecido, o log loss nos ajuda a entender **quem está mais calibrado** nas suas previsões.
 
+---
+
+### 7. Pipeline de Aplicação com MLflow (`PipelineAplicacao`)
+
+## 🧪 Resultados
+
+Exemplo de saída da base de produção:
+
+| lat   | lng   | minutes_remaining | prediction_label |
+|-------|-------|-------------------|------------------|
+| 34.0  | -118  | 5                 | 1 (cesta)        |
+| 33.8  | -117  | 2                 | 0 (erro)         |
+
+- F1 Score (produção): `0.34`
+- Log Loss (produção): `16.44`
+
+
 ## ✨ Inspiração
 
 > *"The most important thing is to try and inspire people so that they can be great in whatever they want to do."*  
