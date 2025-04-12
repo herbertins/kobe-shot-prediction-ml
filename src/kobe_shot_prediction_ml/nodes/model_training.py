@@ -17,12 +17,7 @@ def train_decision_tree(df_train: pd.DataFrame, df_test: pd.DataFrame) -> Tuple[
     results = predict_model(model, data=df_test)
     return model, pd.DataFrame(results)
     
-def select_and_log_best_model(
-    lr_model: Any,
-    lr_predictions: pd.DataFrame,
-    dt_model: Any,
-    dt_predictions: pd.DataFrame
-) -> Tuple[str, Any]:
+def select_and_log_best_model(lr_model: Any, lr_predictions: pd.DataFrame, dt_model: Any, dt_predictions: pd.DataFrame) -> Tuple[str, Any]:
     
     # Calcula métricas das predições do modelo logístico
     lr_logloss = log_loss(lr_predictions["shot_made_flag"], lr_predictions["prediction_label"])
@@ -53,10 +48,8 @@ def select_and_log_best_model(
 
     return best_model
 
-def save_metrics (
-    lr_predictions: pd.DataFrame,
-    dt_predictions: pd.DataFrame
-): 
+def save_metrics (lr_predictions: pd.DataFrame, dt_predictions: pd.DataFrame): 
+    # Salva as metricas
     with mlflow.start_run(run_name="Treinamento", nested=True):
         with mlflow.start_run(run_name="logistic_regression_train", nested=True):    
             logloss = log_loss(lr_predictions["shot_made_flag"], lr_predictions["prediction_label"])
@@ -71,8 +64,3 @@ def save_metrics (
             
             mlflow.log_metric("log_loss_lr", logloss)
             mlflow.log_metric("f1_score_lr", f1)
-        
-        # mlflow.log_param("test_size_percent", 0.2 * 100)
-        # mlflow.log_metric("train_rows", df_train.shape[0])
-        # mlflow.log_metric("test_rows", df_test.shape[0])
-        # mlflow.log_metric("total_rows", df_train.shape[0] + df_test.shape[0])
