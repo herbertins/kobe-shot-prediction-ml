@@ -8,3 +8,4 @@ streamlit
 notebook
 scikit-learn
 pycaret[models, mlops]
+seaborn
