@@ -26,15 +26,15 @@ kobe_test_data:
 
 kobe_model_dt:
   type: pickle.PickleDataset
-  filepath: data/06_models/model_dt.pkl
+  filepath: data/05_models_input/model_dt.pkl
 
 kobe_model_lr:
   type: pickle.PickleDataset
-  filepath: data/06_models/model_lr.pkl
+  filepath: data/05_models_input/model_lr.pkl
 
 kobe_best_model_node:
     type: pickle.PickleDataset
-    filepath: data/06_models/final_model.pkl
+    filepath: data/05_models_input/final_model.pkl
 
 kobe_predictions_model_dt:
   type: pandas.ParquetDataset

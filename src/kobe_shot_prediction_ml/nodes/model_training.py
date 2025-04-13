@@ -45,8 +45,11 @@ def select_and_log_best_model(lr_model: Any, lr_predictions: pd.DataFrame, dt_mo
     best_row = comparison_df.loc[comparison_df["f1_score"].idxmax()]
     best_model_name = best_row["model"]
     best_model = lr_model if best_model_name == "logistic_regression" else dt_model
-
+    
+    save_model(best_model, "data/06_models/final_model")
+    
     return best_model
+
 
 def save_metrics (lr_predictions: pd.DataFrame, dt_predictions: pd.DataFrame): 
     # Salva as metricas
