@@ -320,7 +320,10 @@ Ao ser aplicado em uma base nova com características diferentes, **ele está fa
 
 > Ambas as estratégias podem ser combinadas em um pipeline de MLOps automatizado com validações e alertas.
 
-## ✨ Inspiração
 
-> *"The most important thing is to try and inspire people so that they can be great in whatever they want to do."*  
-> — Kobe Bryant
+## Autor
+Desenvolvido por **Herbert Fenando Jarenco de Souza Martins**  
+🔗 [GitHub Repository](https://github.com/herbertins/kobe-shot-prediction-ml)
+
+*"The most important thing is to try and inspire people so that they can be great in whatever they want to do."*  
+— Kobe Bryant
