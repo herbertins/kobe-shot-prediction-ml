@@ -18,20 +18,6 @@ Este projeto usa técnicas de Machine Learning e engenharia de dados para prever
 
 ---
 
-## 🧪 Resultados
-
-Exemplo de saída da base de produção:
-
-| lat   | lng   | minutes_remaining | prediction_label |
-|-------|-------|-------------------|------------------|
-| 34.0  | -118  | 5                 | 1 (cesta)        |
-| 33.8  | -117  | 2                 | 0 (erro)         |
-
-- F1 Score (produção): `0.71`
-- Log Loss (produção): `0.41`
-
----
-
 ## 📊 Dashboard de Monitoramento
 
 Dashboard criado com Streamlit para monitorar os resultados em produção.
@@ -297,18 +283,42 @@ Mesmo que dois modelos tenham um `f1_score` parecido, o log loss nos ajuda a ent
 
 ### 7. Pipeline de Aplicação com MLflow (`PipelineAplicacao`)
 
-## 🧪 Resultados
+## 📈 Análise de Aderência do Modelo em Produção
 
-Exemplo de saída da base de produção:
+**Resultados observados:**
 
-| lat   | lng   | minutes_remaining | prediction_label |
-|-------|-------|-------------------|------------------|
-| 34.0  | -118  | 5                 | 1 (cesta)        |
-| 33.8  | -117  | 2                 | 0 (erro)         |
+- `F1 Score (produção)`: **0.34**
+- `Log Loss (produção)`: **16.44**
 
-- F1 Score (produção): `0.34`
-- Log Loss (produção): `16.44`
+**O modelo **não é aderente** à nova base:**
 
+Esses valores indicam que o modelo teve dificuldade em generalizar para a nova distribuição dos dados.  
+Diferenças em `lat`, `lon` e demais variáveis indicam um possível **data drift** em relação à base de treino.
+
+**Justificativa**
+
+O modelo foi treinado com uma base que provavelmente apresenta **outras posições de arremesso (lat/lon) e outras condições de jogo.**
+Ao ser aplicado em uma base nova com características diferentes, **ele está fazendo previsões com alta confiança em situações que ele não conhece bem**, o que leva ao aumento do erro (log loss alto) e queda no F1.
+
+## 🔍 Monitoramento da Saúde do Modelo e Estratégias de Retreinamento
+
+### Monitoramento da saúde do modelo (com e sem variável de resposta)
+
+| Cenário | Estratégia de Monitoramento |
+|--------|------------------------------|
+| **Com variável de resposta** | - Calcular métricas como `f1_score`, `log_loss`, `accuracy`<br>- Comparar predições com rótulos reais<br>- Atualizar dashboards com métricas de performance |
+| **Sem variável de resposta** | - Monitorar distribuição dos dados de entrada (ex: `lat`, `lon`, etc.)<br>- Detectar *data drift* com testes estatísticos (ex: PSI, KS Test)<br>- Observar mudanças no padrão das predições (prediction drift)<br>- Validar presença de valores nulos, outliers, entradas inesperadas |
+
+---
+
+### Estratégias de retreinamento do modelo
+
+| Estratégia | Descrição |
+|------------|-----------|
+| **Reativa** | Ocorre quando é identificada uma degradação na performance do modelo (ex: queda no `f1_score`, aumento no `log_loss`). Um novo modelo é treinado com dados mais recentes. |
+| **Preditiva** | O retreinamento ocorre de forma agendada (ex: mensal, trimestral), mesmo que o modelo ainda esteja performando bem. Previne obsolescência causada por mudanças lentas nos dados. |
+
+> Ambas as estratégias podem ser combinadas em um pipeline de MLOps automatizado com validações e alertas.
 
 ## ✨ Inspiração
 

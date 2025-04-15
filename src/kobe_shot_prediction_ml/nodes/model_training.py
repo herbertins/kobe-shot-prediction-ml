@@ -47,6 +47,7 @@ def select_and_log_best_model(lr_model: Any, lr_predictions: pd.DataFrame, dt_mo
     best_model = lr_model if best_model_name == "logistic_regression" else dt_model
     
     save_model(best_model, "data/06_models/final_model")
+    mlflow.sklearn.log_model(best_model, "model", registered_model_name="final_model")
     
     return best_model
 
@@ -67,3 +68,5 @@ def save_metrics (lr_predictions: pd.DataFrame, dt_predictions: pd.DataFrame):
             
             mlflow.log_metric("log_loss_lr", logloss)
             mlflow.log_metric("f1_score_lr", f1)
+    
+        
